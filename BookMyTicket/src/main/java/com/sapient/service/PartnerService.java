@@ -29,6 +29,10 @@ public class PartnerService {
 		this.screenRepo = s;
 		this.movieRepo = m;
 	}
+	
+	public Partner getPartner(Long id) {
+		return this.partnerRepo.findById(id).get();
+	}
 
 	public Partner createPartner(Partner p) {
 		return partnerRepo.save(p);

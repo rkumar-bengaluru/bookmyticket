@@ -1,8 +1,11 @@
 package com.sapient.controllers;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,12 +29,21 @@ import com.sapient.service.PartnerService;
 @RestController
 @RequestMapping("/partners")
 public class PartnerController {
-	
+	private static final Log logger = LogFactory.getLog(PartnerController.class);
 	@Autowired
 	private PartnerService service;
 
 	public PartnerController(PartnerService serv) {
 		this.service = serv;
+	}
+	
+	@GetMapping("/{pid}")
+	public Partner getPartner(@PathVariable Long pid) {
+		try {
+			return service.getPartner(pid);
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+		}
 	}
 
 	/**
@@ -137,6 +149,7 @@ public class PartnerController {
 	public Movie deleteMovie(@PathVariable Long pid, @PathVariable Long tid, @PathVariable Long sid,
 			@PathVariable Long mid) {
 		try {
+			logger.info(mid);
 			return service.deleteMovie(mid);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);

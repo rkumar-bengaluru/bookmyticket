@@ -3,15 +3,33 @@ package com.sapient.entity;
 import java.util.Objects;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
-@Entity(name = "movies")
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+@Entity(name = "movie")
 public class Movie {
 	@Id
 	@GeneratedValue
 	private Long id;
 	private String name;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "screen_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private Screen screen;
+
+	public Screen getScreen() {
+		return screen;
+	}
+
+	public void setScreen(Screen screen) {
+		this.screen = screen;
+	}
 
 	public Long getId() {
 		return id;

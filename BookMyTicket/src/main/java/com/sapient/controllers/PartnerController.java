@@ -59,8 +59,7 @@ public class PartnerController {
 	@PostMapping("/{pid}/theatre")
 	public Theatre newTheatre(@PathVariable Long pid, @RequestBody Theatre newTheatre) {
 		try {
-			return null;
-			//return service.createTheater(pid, newTheatre);
+			return service.createTheater(pid, newTheatre);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
 		}
@@ -77,8 +76,7 @@ public class PartnerController {
 	@PostMapping("/{pid}/{tid}/screen")
 	public Screen newScreen(@PathVariable Long pid, @PathVariable Long tid, @RequestBody Screen newScreen) {
 		try {
-			return null;
-			//return service.createScreen(pid, tid, newScreen);
+			return service.createScreen(pid, tid, newScreen);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
 		}
@@ -100,8 +98,7 @@ public class PartnerController {
 			@PathVariable Long sid,
 			@RequestBody Movie newMovie) {
 		try {
-			return null;
-			//return service.createMovie(pid, tid, sid, newMovie);
+			return service.createMovie(pid, tid, sid, newMovie);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
 		}
@@ -121,8 +118,7 @@ public class PartnerController {
 	public Movie updateMovie(@PathVariable Long pid, @PathVariable Long tid, @PathVariable Long sid,
 			@PathVariable Long mid, @RequestBody Movie updateMovie) {
 		try {
-			return null;
-			//return service.updateMovie(pid, tid, sid, updateMovie);
+			return service.updateMovie(pid, tid, sid, updateMovie);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
 		}
@@ -141,8 +137,7 @@ public class PartnerController {
 	public Movie deleteMovie(@PathVariable Long pid, @PathVariable Long tid, @PathVariable Long sid,
 			@PathVariable Long mid) {
 		try {
-			return null;
-			//return service.deleteMovie(mid);
+			return service.deleteMovie(mid);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
 		}

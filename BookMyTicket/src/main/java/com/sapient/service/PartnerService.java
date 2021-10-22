@@ -95,4 +95,8 @@ public class PartnerService {
 		this.movieRepo.delete(m);
 		return m;
 	}
+	
+	public List<Movie> findAllRunningMovies() {
+		return this.movieRepo.findAll();
+	}
 }

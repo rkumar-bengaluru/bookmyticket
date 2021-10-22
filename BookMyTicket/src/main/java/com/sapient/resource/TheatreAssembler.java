@@ -34,7 +34,7 @@ public class TheatreAssembler extends RepresentationModelAssemblerSupport<Theatr
 	public TheatreResource toModel(Theatre entity) {
 		TheatreResource model = instantiateModel(entity);
 
-		model.add(linkTo(methodOn(SearchController.class).findScreens(entity.getId())).withSelfRel());
+		model.add(linkTo(methodOn(SearchController.class).findScreen(entity.getId())).withSelfRel());
 
 		model.setId(entity.getId());
 		model.setName(entity.getName());

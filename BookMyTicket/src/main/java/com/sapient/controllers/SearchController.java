@@ -2,6 +2,7 @@ package com.sapient.controllers;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -101,5 +102,15 @@ public class SearchController {
 		return new ResponseEntity<>(massembler.toModel(movie), HttpStatus.OK);
 	}
 
-	
+	@GetMapping("/movie/active")
+	public ResponseEntity<CollectionModel<MovieResource>> 
+		findRunningShows() {
+		List<Movie> movies = service.findAllRunningMovies();
+		List<Movie> active = movies.stream().filter(
+				m -> {
+					logger.info("movie status " + m.getStatus());
+					return m.getStatus().equals("RUNNING");
+				}).collect(Collectors.toList());
+		return new ResponseEntity<>(massembler.toCollectionModel(active), HttpStatus.OK);
+	}
 }

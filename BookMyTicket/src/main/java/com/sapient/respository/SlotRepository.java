@@ -7,17 +7,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.sapient.entity.Screen;
+import com.sapient.entity.Slot;
 
 
 
-public interface ScreenRepository extends JpaRepository<Screen, Long> {
+public interface SlotRepository extends JpaRepository<Slot, Long> {
 	/**
 	 * Custom query to find theatres of a partner
 	 * 
 	 * @param name
 	 * @return
 	 */
-	@Query("Select c from screen c where c.theatre.id = :pid")
-	Set<Screen> findByTheatreId(@Param("pid")Long pid);
+	@Query("Select c from slot c where c.movie.id = :pid")
+	Set<Slot> findByMovieId(@Param("pid")Long pid);
 }

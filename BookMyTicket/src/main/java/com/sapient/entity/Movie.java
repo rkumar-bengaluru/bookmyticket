@@ -18,6 +18,25 @@ public class Movie {
 	@GeneratedValue
 	private Long id;
 	private String name;
+	private String language;
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	private String status;
+	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "screen_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)

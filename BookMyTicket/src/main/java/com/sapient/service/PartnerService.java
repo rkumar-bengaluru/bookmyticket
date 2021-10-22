@@ -1,15 +1,20 @@
 package com.sapient.service;
 
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sapient.entity.Movie;
 import com.sapient.entity.Partner;
 import com.sapient.entity.Screen;
+import com.sapient.entity.Slot;
 import com.sapient.entity.Theatre;
 import com.sapient.respository.MovieRepository;
 import com.sapient.respository.PartnerJPARepository;
 import com.sapient.respository.ScreenRepository;
+import com.sapient.respository.SlotRepository;
 import com.sapient.respository.TheatreRepository;
 
 @Service
@@ -22,12 +27,22 @@ public class PartnerService {
 	private ScreenRepository screenRepo;
 	@Autowired
 	private MovieRepository movieRepo;
-
-	public PartnerService(PartnerJPARepository p, TheatreRepository t, ScreenRepository s, MovieRepository m) {
+	@Autowired
+	private SlotRepository slotRepo;
+	public PartnerService(PartnerJPARepository p, TheatreRepository t, ScreenRepository s, MovieRepository m,SlotRepository sl) {
 		this.partnerRepo = p;
 		this.theatreRepo = t;
 		this.screenRepo = s;
 		this.movieRepo = m;
+		this.slotRepo = sl;
+	}
+	
+	public Set<Slot> findSlotByModie(Long mid) {
+		return this.slotRepo.findByMovieId(mid);
+	}
+	
+	public List<Partner> getAllPartners() {
+		return this.partnerRepo.findAll();
 	}
 	
 	public Partner getPartner(Long id) {
@@ -43,19 +58,32 @@ public class PartnerService {
 		t.setPartner(p);
 		return theatreRepo.save(t);
 	}
-
+	public Set<Theatre> findTheatreByPartnerId(Long pid) {
+		return this.theatreRepo.findByPartnerId(pid);
+	}
 	public Screen createScreen(Long pid, Long tid, Screen newScreen) {
 		Theatre t = this.theatreRepo.findById(tid).get();
 		newScreen.setTheatre(t);
 		return this.screenRepo.save(newScreen);
 	}
-
+	public Set<Screen> findByTheatreId(Long pid) {
+		return this.screenRepo.findByTheatreId(pid);
+	}
+	public Screen findScreen(Long mid) {
+		return this.screenRepo.findById(mid).get();
+	}
 	public Movie createMovie(Long pid, Long tid, Long sid, Movie newMovie) {
 		Screen s = this.screenRepo.findById(sid).get();
 		newMovie.setScreen(s);
 		return this.movieRepo.save(newMovie);
 	}
-
+	public Set<Movie> findByScreenId(Long pid) {
+		return this.movieRepo.findByScreenId(pid);
+	}
+	
+	public Movie findMovie(Long mid) {
+		return this.movieRepo.findById(mid).get();
+	}
 	public Movie updateMovie(Long pid, Long tid, Long sid, Movie newMovie) {
 		Screen s = this.screenRepo.findById(sid).get();
 		newMovie.setScreen(s);

@@ -19,5 +19,5 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 	 * @return
 	 */
 	@Query("Select c from movie c where c.screen.id = :pid")
-	Set<Movie> findByPartnerId(@Param("pid")Long pid);
+	Set<Movie> findByScreenId(@Param("pid")Long pid);
 }

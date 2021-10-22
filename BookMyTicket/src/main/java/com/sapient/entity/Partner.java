@@ -12,8 +12,6 @@ public class Partner {
 	@GeneratedValue
 	private Long id;
 	private String name;
-//	@OneToMany(targetEntity = Theatre.class)
-//	private List<Theatre> theaters;
 
 	public Long getId() {
 		return id;

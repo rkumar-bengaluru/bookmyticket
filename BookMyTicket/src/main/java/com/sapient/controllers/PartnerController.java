@@ -97,7 +97,10 @@ public class PartnerController {
 	 * @return
 	 */
 	@PostMapping("/{pid}/{tid}/screen")
-	public Screen newScreen(@PathVariable Long pid, @PathVariable Long tid, @RequestBody Screen newScreen) {
+	public Screen newScreen(
+			@PathVariable Long pid, 
+			@PathVariable Long tid, 
+			@RequestBody Screen newScreen) {
 		try {
 			return service.createScreen(pid, tid, newScreen);
 		} catch (Exception e) {
@@ -157,7 +160,8 @@ public class PartnerController {
 	 * @return
 	 */
 	@DeleteMapping("/{pid}/{tid}/{sid}/{mid}")
-	public Movie deleteMovie(@PathVariable Long pid, @PathVariable Long tid, @PathVariable Long sid,
+	public Movie deleteMovie(
+			@PathVariable Long pid, @PathVariable Long tid, @PathVariable Long sid,
 			@PathVariable Long mid) {
 		try {
 			logger.info(mid);

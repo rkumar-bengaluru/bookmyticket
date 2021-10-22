@@ -69,25 +69,37 @@ public class SearchController {
 	 * @return
 	 */
 	@GetMapping("/all")
-	public ResponseEntity<CollectionModel<PartnerResource>> getAllActors() {
+	public ResponseEntity<CollectionModel<PartnerResource>> findAllPartners() {
 		List<Partner> partners = service.getAllPartners();
 		return new ResponseEntity<>(passembler.toCollectionModel(partners), HttpStatus.OK);
 	}
-
+	/**
+	 * 
+	 * @param pid
+	 * @return
+	 */
 	@GetMapping("/partner/{pid}")
 	public ResponseEntity<CollectionModel<TheatreResource>> 
 		findTheatersOfPartner(@PathVariable Long pid) {
 		Set<Theatre> theatres = service.findTheatreByPartnerId(pid);
 		return new ResponseEntity<>(tassembler.toCollectionModel(theatres), HttpStatus.OK);
 	}
-	
+	/**
+	 * 
+	 * @param tid
+	 * @return
+	 */
 	@GetMapping("/theater/{tid}")
 	public ResponseEntity<CollectionModel<TheatreResource>> 
 		findScreensOfTheatres(@PathVariable Long tid) {
 		Set<Theatre> theatres = service.findTheatreByPartnerId(tid);
 		return new ResponseEntity<>(tassembler.toCollectionModel(theatres), HttpStatus.OK);
 	}
-	
+	/**
+	 * 
+	 * @param tid
+	 * @return
+	 */
 	@GetMapping("/screen/{tid}")
 	public ResponseEntity<ScreenResource> 
 		findScreen(@PathVariable Long tid) {

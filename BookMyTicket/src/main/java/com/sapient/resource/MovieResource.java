@@ -7,9 +7,9 @@ import org.springframework.hateoas.RepresentationModel;
 public class MovieResource extends RepresentationModel<MovieResource>{
 	private Long id;
 	private String name;
-	private List<SlotResource> slots;
 	private String language;
 	private String status;
+	private List<SlotResource> slots;
 	public String getLanguage() {
 		return language;
 	}

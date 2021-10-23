@@ -1,0 +1,23 @@
+package com.sapient.respository;
+
+
+import java.util.Set;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.sapient.entity.Seat;
+
+
+
+public interface SeatRepository extends JpaRepository<Seat, Long> {
+	/**
+	 * Custom query to find theatres of a partner
+	 * 
+	 * @param name
+	 * @return
+	 */
+	@Query("Select c from seats c where c.screen.id = :sid")
+	Set<Seat> findSeatByScreenId(@Param("sid")Long sid);
+}

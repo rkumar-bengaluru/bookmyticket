@@ -8,6 +8,13 @@ public class ScreenResource extends RepresentationModel<ScreenResource>{
 	private Long id;
 	private String name;
 	private List<MovieResource> movies;
+	private List<SeatResource> seats;
+	public List<SeatResource> getSeats() {
+		return seats;
+	}
+	public void setSeats(List<SeatResource> seats) {
+		this.seats = seats;
+	}
 	public List<MovieResource> getMovies() {
 		return movies;
 	}

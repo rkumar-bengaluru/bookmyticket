@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 import com.sapient.entity.Movie;
 import com.sapient.entity.Partner;
 import com.sapient.entity.Screen;
+import com.sapient.entity.Seat;
 import com.sapient.entity.Slot;
 import com.sapient.entity.Theatre;
 import com.sapient.respository.MovieRepository;
 import com.sapient.respository.PartnerJPARepository;
 import com.sapient.respository.ScreenRepository;
+import com.sapient.respository.SeatRepository;
 import com.sapient.respository.SlotRepository;
 import com.sapient.respository.TheatreRepository;
 
@@ -29,12 +31,15 @@ public class PartnerService {
 	private MovieRepository movieRepo;
 	@Autowired
 	private SlotRepository slotRepo;
-	public PartnerService(PartnerJPARepository p, TheatreRepository t, ScreenRepository s, MovieRepository m,SlotRepository sl) {
+	@Autowired
+	private SeatRepository seatRepo;
+	public PartnerService(PartnerJPARepository p, TheatreRepository t, ScreenRepository s, MovieRepository m,SlotRepository sl,SeatRepository sr) {
 		this.partnerRepo = p;
 		this.theatreRepo = t;
 		this.screenRepo = s;
 		this.movieRepo = m;
 		this.slotRepo = sl;
+		this.seatRepo = sr;
 	}
 	
 	public Set<Slot> findSlotByModie(Long mid) {
@@ -98,5 +103,9 @@ public class PartnerService {
 	
 	public List<Movie> findAllRunningMovies() {
 		return this.movieRepo.findAll();
+	}
+	
+	public Set<Seat> findSeatsByScreen(Long sid) {
+		return this.seatRepo.findSeatByScreenId(sid);
 	}
 }

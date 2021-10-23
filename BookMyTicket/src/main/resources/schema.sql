@@ -36,3 +36,12 @@ create table slot (
     movie_id	INTEGER NOT NULL,
     primary key (id)
 );
+
+create table seats (
+    id			INTEGER NOT NULL AUTO_INCREMENT,
+    rowno        INTEGER NOT NULL,
+    no        varchar(100)    not null,
+    state        varchar(100)    not null,
+    screen_id	INTEGER NOT NULL,
+    primary key (id)
+);

@@ -10,6 +10,13 @@ public class MovieResource extends RepresentationModel<MovieResource>{
 	private String language;
 	private String status;
 	private List<SlotResource> slots;
+	private ScreenResource screen;
+	public ScreenResource getScreen() {
+		return screen;
+	}
+	public void setScreen(ScreenResource screen) {
+		this.screen = screen;
+	}
 	public String getLanguage() {
 		return language;
 	}

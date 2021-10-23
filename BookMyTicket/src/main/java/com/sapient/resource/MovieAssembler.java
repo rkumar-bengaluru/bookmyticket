@@ -24,10 +24,13 @@ public class MovieAssembler extends RepresentationModelAssemblerSupport<Movie, M
 
 	@Autowired
 	private PartnerService service;
+	@Autowired
+	private ScreenAssembler assembler;
 
-	public MovieAssembler(PartnerService serv) {
+	public MovieAssembler(PartnerService serv,ScreenAssembler a) {
 		super(SearchController.class, MovieResource.class);
 		this.service = serv;
+		this.assembler = a;
 	}
 
 	@Override
@@ -40,6 +43,7 @@ public class MovieAssembler extends RepresentationModelAssemblerSupport<Movie, M
 		model.setName(entity.getName());
 		model.setLanguage(entity.getLanguage());
 		model.setStatus(entity.getStatus());
+		model.setScreen(this.assembler.toModel(entity.getScreen()));
 		model.setSlots(toScreenModel(service.findSlotByModie(entity.getId())));
 		return model;
 	}

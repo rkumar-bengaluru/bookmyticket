@@ -1,0 +1,10 @@
+server:
+  port: 8081
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:      defaultZone: http://{host1}/eureka/,http://{host2}/eureka/,http://{host3}/eureka/
+  instance:
+    hostname: localhost
+    

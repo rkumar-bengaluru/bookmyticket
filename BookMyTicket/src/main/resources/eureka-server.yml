@@ -1,0 +1,16 @@
+spring:
+  profiles: bookmyticket-registry-server
+  application:
+    name:  bookmyticket-clustered-registry-server
+server:
+  port: 8001
+eureka:
+  instance:
+    hostname: bookmyticket.registry01.com
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://bookmyticket.registry01.com:9002/eureka/,
+                   http://bookmyticket.registry02.com:9003/eureka/
+  

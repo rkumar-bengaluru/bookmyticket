@@ -1,0 +1,13 @@
+spring:
+  profiles:     default: peer-1 
+  application:    name: bmt-eureka-cluster
+server:  port: 8761
+eureka:
+  instance:
+    hostname: bmt.eurekaserver01.com
+  client:
+    serviceUrl:
+      defaultZone: http://bmt.eurekaserver02.com/eureka/     register-with-eureka: true
+    fetch-registry: true
+  
+    

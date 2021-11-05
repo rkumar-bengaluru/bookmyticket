@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,8 @@ import com.sapient.entity.Movie;
 import com.sapient.entity.Partner;
 import com.sapient.entity.Screen;
 import com.sapient.entity.Theatre;
+import com.sapient.resource.PartnerResouceAssember;
+import com.sapient.resource.PartnerResource;
 import com.sapient.service.PartnerService;
 
 /**
@@ -34,15 +37,18 @@ public class PartnerController {
 	private static final Log logger = LogFactory.getLog(PartnerController.class);
 	@Autowired
 	private PartnerService service;
-
-	public PartnerController(PartnerService serv) {
+	@Autowired
+	private PartnerResouceAssember passembler;
+	public PartnerController(PartnerService serv,PartnerResouceAssember pa) {
 		this.service = serv;
+		this.passembler = pa;
 	}
 	
 	@GetMapping("/{pid}")
-	public Partner getPartner(@PathVariable Long pid) {
+	public ResponseEntity<PartnerResource> getPartner(@PathVariable Long pid) {
 		try {
-			return service.getPartner(pid);
+			Partner p =  service.getPartner(pid);
+			return new ResponseEntity<>(this.passembler.toModel(p), HttpStatus.OK);
 		} catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
 		}

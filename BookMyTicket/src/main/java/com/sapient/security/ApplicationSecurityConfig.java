@@ -27,15 +27,22 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 		.antMatchers("/","/index")
-		.permitAll().anyRequest().authenticated()
+		.permitAll() 
+		.antMatchers("/search/**") 
+		.hasAnyRole(UserRoles.ADMIN.name(),UserRoles.PUBLIC.name()) 
+		.antMatchers("/partners/**")
+		.hasRole(UserRoles.ADMIN.name())
+		.anyRequest().authenticated()
 		.and().httpBasic();
 	}
 	@Override
 	@Bean
 	protected UserDetailsService userDetailsService() {
-		UserDetails user = User.builder().username("rupak") 
-				.password(passwordEncoder.encode("abcd")).roles("ADMIN").build();
-		return new InMemoryUserDetailsManager(user);
+		UserDetails admin = User.builder().username("rupak") 
+				.password(passwordEncoder.encode("abcd")).roles(UserRoles.ADMIN.name()).build();
+		UserDetails user = User.builder().username("aryan")
+		.password(passwordEncoder.encode("pwd")).roles(UserRoles.PUBLIC.name()).build();
+		return new InMemoryUserDetailsManager(admin,user);
 	}
 
 }

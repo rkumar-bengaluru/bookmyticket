@@ -2,14 +2,18 @@ package com.sapient.security;
 
 import static com.sapient.security.UserPermission.PARTNER_WRITE;
 import static com.sapient.security.UserPermission.SEARCH_ALL;
+import static com.sapient.security.UserPermission.PARTNER_READ;
 
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.google.common.collect.Sets;
 
 public enum UserRoles {
 	PUBLIC(Sets.newHashSet(SEARCH_ALL)),
-	ADMIN(Sets.newHashSet(PARTNER_WRITE));
+	ADMIN(Sets.newHashSet(SEARCH_ALL,PARTNER_WRITE,PARTNER_READ));
 	
 	private final Set<UserPermission> permissions;
 
@@ -19,6 +23,15 @@ public enum UserRoles {
 
 	public Set<UserPermission> getPermissions() {
 		return permissions;
+	}
+	
+	public Set<SimpleGrantedAuthority> getGrantedAuthrities() {
+		Set<SimpleGrantedAuthority> all = this.getPermissions().stream().map(
+				permission -> 
+				new SimpleGrantedAuthority(permission.getPermission())).collect(Collectors.toSet());
+		
+		all.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+		return all;
 	}
 	
 	

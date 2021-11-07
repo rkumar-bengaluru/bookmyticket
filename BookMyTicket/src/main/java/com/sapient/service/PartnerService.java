@@ -3,6 +3,9 @@ package com.sapient.service;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +36,7 @@ public class PartnerService {
 	private SlotRepository slotRepo;
 	@Autowired
 	private SeatRepository seatRepo;
+	Logger logger = LoggerFactory.getLogger(getClass());
 	public PartnerService(PartnerJPARepository p, TheatreRepository t, ScreenRepository s, MovieRepository m,SlotRepository sl,SeatRepository sr) {
 		this.partnerRepo = p;
 		this.theatreRepo = t;
@@ -59,9 +63,11 @@ public class PartnerService {
 	}
 
 	public Theatre createTheater(Long pid, Theatre t) {
+		logger.info("inside create theatre " + pid);
 		Partner p = this.partnerRepo.findById(pid).get();
+		logger.info("inside create theatre " + pid);
 		t.setPartner(p);
-		return theatreRepo.save(t);
+		return t;
 	}
 	public Set<Theatre> findTheatreByPartnerId(Long pid) {
 		return this.theatreRepo.findByPartnerId(pid);

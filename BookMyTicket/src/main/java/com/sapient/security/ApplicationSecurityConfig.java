@@ -1,9 +1,14 @@
 package com.sapient.security;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,17 +17,24 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import com.sapient.security.auth.ApplicationUserDetailsService;
 
 @Configuration
-	@EnableWebSecurity
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled=true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private final PasswordEncoder passwordEncoder;
+	@Autowired
+	private final ApplicationUserDetailsService userDetails;
 	
-	public ApplicationSecurityConfig(PasswordEncoder e) {
+	public ApplicationSecurityConfig(PasswordEncoder e,
+			ApplicationUserDetailsService userDetails) {
 		this.passwordEncoder = e;
+		this.userDetails = userDetails;
 	}
 	
 	@Override
@@ -43,21 +55,35 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 		.anyRequest()
 		.authenticated()
 		.and()
-		//.httpBasic();
-		.formLogin();
+		// form based authentication
+		.formLogin()
+		// custom login page
+		.loginPage("/login")
+			.passwordParameter("password")
+			.usernameParameter("username")
+			.permitAll()
+			.defaultSuccessUrl("/home",true)
+		.and()
+		// remember me enabled
+		.rememberMe()
+			.tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(1))
+			.key("secretkey")
+			.rememberMeParameter("remember-me")
+		.and()
+		// custom logout page
+		.logout()
+			.logoutUrl("/logout")
+			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+			.clearAuthentication(true)
+			.invalidateHttpSession(true)
+			.deleteCookies("JSESSIONID","remember-me")
+			.logoutSuccessUrl("/home");
+			
 	}
 	
 	@Override
 	@Bean
 	protected UserDetailsService userDetailsService() {
-//		UserDetails admin = User.builder() 
-//				.username("rupak") 
-//				.password(passwordEncoder.encode("abcd")) 
-//				.roles(UserRoles.ADMIN.name()).build();
-//		UserDetails user = User.builder() 
-//				.username("aryan")
-//				.password(passwordEncoder.encode("pwd")) 
-//				.roles(UserRoles.PUBLIC.name()).build();
 		
 		UserDetails admin = User.builder() 
 				.username("rupak") 
@@ -70,6 +96,20 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorities(UserRoles.PUBLIC.getGrantedAuthrities()) 
 				.build();
 		return new InMemoryUserDetailsManager(admin,user);
+	}
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.authenticationProvider(provider());
+	}
+	
+	@Bean
+	private DaoAuthenticationProvider provider() {
+		DaoAuthenticationProvider provider = 
+				new DaoAuthenticationProvider();
+		provider.setPasswordEncoder(passwordEncoder);
+		provider.setUserDetailsService(userDetails);
+		return provider;
 	}
 
 }

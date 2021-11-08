@@ -31,7 +31,9 @@ public class JwtFilter extends UsernamePasswordAuthenticationFilter {
 	}
 
 	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+	public Authentication attemptAuthentication(
+			HttpServletRequest request, 
+			HttpServletResponse response)
 			throws AuthenticationException {
 		try {
 			User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
@@ -48,12 +50,18 @@ public class JwtFilter extends UsernamePasswordAuthenticationFilter {
 	}
 
 	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+	protected void successfulAuthentication(
+			HttpServletRequest request, 
+			HttpServletResponse response, 
+			FilterChain chain,
 			Authentication auth) throws IOException, ServletException {
 		String key = "mysecretmysecretmysecretmysecretmysecretmysecretmysecretmysecret";
-		String token = Jwts.builder().setSubject(auth.getName()).claim("authorities", auth.getAuthorities())
+		String token = Jwts.builder() 
+				.setSubject(auth.getName()) 
+				.claim("authorities", auth.getAuthorities())
 				.setIssuedAt(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
-				.signWith(Keys.hmacShaKeyFor(key.getBytes())).compact();
+				.signWith(Keys.hmacShaKeyFor(key.getBytes())) 
+				.compact();
 		response.addHeader("Authorization", "Bearer " + token);
 	}
 

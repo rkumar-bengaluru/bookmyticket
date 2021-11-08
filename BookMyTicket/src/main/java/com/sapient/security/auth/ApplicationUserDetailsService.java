@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-//@Service
+@Service
 public class ApplicationUserDetailsService implements UserDetailsService {
 	private static final Log logger = LogFactory.getLog(ApplicationUserDetailsService.class);
 	private final ApplicationUserDao userDao;

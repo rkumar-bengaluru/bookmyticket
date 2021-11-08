@@ -4,16 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import com.sapient.security.auth.ApplicationUserChecker;
+import com.sapient.security.auth.ApplicationUserDetailsService;
 import com.sapient.security.jwt.JwtFilter;
 
 @Configuration
@@ -23,9 +23,12 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private final PasswordEncoder passwordEncoder;
+	@Autowired
+	private final ApplicationUserDetailsService applicationUserDetailsService;
 	
-	public ApplicationSecurityConfig(PasswordEncoder e) {
+	public ApplicationSecurityConfig(PasswordEncoder e,ApplicationUserDetailsService as) {
 		this.passwordEncoder = e;
+		this.applicationUserDetailsService = as;
 	}
 	
 	@Override
@@ -75,36 +78,36 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 			
 	}
 	
+//	@Override
+//	@Bean
+//	protected UserDetailsService userDetailsService() {
+//		
+//		UserDetails admin = User.builder() 
+//				.username("rupak") 
+//				.password(passwordEncoder.encode("password"))
+//				.authorities(UserRoles.ADMIN.getGrantedAuthrities()) 
+//				.build();
+//		UserDetails user = User.builder() 
+//				.username("aryan")
+//				.password(passwordEncoder.encode("password"))
+//				.authorities(UserRoles.PUBLIC.getGrantedAuthrities()) 
+//				.build();
+//		return new InMemoryUserDetailsManager(admin,user);
+//	}
+	
 	@Override
-	@Bean
-	protected UserDetailsService userDetailsService() {
-		
-		UserDetails admin = User.builder() 
-				.username("rupak") 
-				.password(passwordEncoder.encode("password"))
-				.authorities(UserRoles.ADMIN.getGrantedAuthrities()) 
-				.build();
-		UserDetails user = User.builder() 
-				.username("aryan")
-				.password(passwordEncoder.encode("password"))
-				.authorities(UserRoles.PUBLIC.getGrantedAuthrities()) 
-				.build();
-		return new InMemoryUserDetailsManager(admin,user);
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.authenticationProvider(provider());
 	}
 	
-//	@Override
-//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//		auth.authenticationProvider(provider());
-//	}
-//	
-//	@Bean
-//	public DaoAuthenticationProvider provider() {
-//		DaoAuthenticationProvider provider = 
-//				new DaoAuthenticationProvider();
-//		provider.setPreAuthenticationChecks(new ApplicationUserChecker());
-//		provider.setPasswordEncoder(passwordEncoder);
-//		provider.setUserDetailsService(userDetails);
-//		return provider;
-//	}
+	@Bean
+	public DaoAuthenticationProvider provider() {
+		DaoAuthenticationProvider provider = 
+				new DaoAuthenticationProvider();
+		provider.setPreAuthenticationChecks(new ApplicationUserChecker());
+		provider.setPasswordEncoder(passwordEncoder);
+		provider.setUserDetailsService(applicationUserDetailsService);
+		return provider;
+	}
 
 }

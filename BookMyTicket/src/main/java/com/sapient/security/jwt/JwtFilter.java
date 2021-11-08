@@ -24,6 +24,7 @@ public class JwtFilter extends UsernamePasswordAuthenticationFilter {
 
 	private final AuthenticationManager manager;
 	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(JwtFilter.class);
+	private final String key = "mysecretmysecretmysecretmysecretmysecretmysecretmysecretmysecret";
 
 	public JwtFilter(AuthenticationManager manager) {
 		super();
@@ -55,12 +56,12 @@ public class JwtFilter extends UsernamePasswordAuthenticationFilter {
 			HttpServletResponse response, 
 			FilterChain chain,
 			Authentication auth) throws IOException, ServletException {
-		String key = "mysecretmysecretmysecretmysecretmysecretmysecretmysecretmysecret";
 		String token = Jwts.builder() 
 				.setSubject(auth.getName()) 
 				.claim("authorities", auth.getAuthorities())
-				.setIssuedAt(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
+				.setIssuedAt(java.sql.Date.valueOf(LocalDate.now()))
 				.signWith(Keys.hmacShaKeyFor(key.getBytes())) 
+				.setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
 				.compact();
 		response.addHeader("Authorization", "Bearer " + token);
 	}

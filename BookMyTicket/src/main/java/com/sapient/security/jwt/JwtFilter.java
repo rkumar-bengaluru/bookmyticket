@@ -34,13 +34,11 @@ public class JwtFilter extends UsernamePasswordAuthenticationFilter {
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 		try {
-			logger.trace("trace log");
 			User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
-			logger.info(String.format("username %s password %s", user.getUsername(), user.getPassword()));
-			Authentication auth = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
-			logger.info("credentials:" + auth);
-			Authentication authentication = manager.authenticate(auth);
-			logger.info("-----------------:");
+			Authentication authentication = manager.authenticate(
+					new UsernamePasswordAuthenticationToken(
+							user.getUsername(),
+							user.getPassword()));
 			return authentication;
 		} catch (IOException e) {
 			logger.info(e.getMessage());

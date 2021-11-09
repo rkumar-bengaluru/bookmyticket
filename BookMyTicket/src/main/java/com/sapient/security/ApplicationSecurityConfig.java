@@ -14,21 +14,27 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.sapient.security.auth.ApplicationUserChecker;
 import com.sapient.security.auth.ApplicationUserDetailsService;
+import com.sapient.security.jwt.JwtConfig;
 import com.sapient.security.jwt.JwtFilter;
+import com.sapient.security.jwt.JwtTokenFilter;
 
 @Configuration
 @EnableWebSecurity
 
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	@Autowired
 	private final PasswordEncoder passwordEncoder;
-	@Autowired
 	private final ApplicationUserDetailsService applicationUserDetailsService;
+	private final JwtConfig config;
 	
-	public ApplicationSecurityConfig(PasswordEncoder e,ApplicationUserDetailsService as) {
+	@Autowired
+	public ApplicationSecurityConfig(
+			PasswordEncoder e,
+			ApplicationUserDetailsService as,
+			JwtConfig config) {
 		this.passwordEncoder = e;
 		this.applicationUserDetailsService = as;
+		this.config = config;
 	}
 	
 	@Override
@@ -37,7 +43,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 		.csrf().disable()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
-		.addFilter(new JwtFilter(authenticationManager()))		
+		.addFilter(new JwtFilter(authenticationManager(),config))	
+		.addFilterAfter(new JwtTokenFilter(config), JwtFilter.class)
 		.authorizeRequests()
 		.antMatchers("/")
 		.permitAll()

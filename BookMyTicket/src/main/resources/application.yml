@@ -9,4 +9,6 @@ eureka:
     serviceUrl:
       defaultZone: http://bmt.eurekaserver02.com/eureka/     register-with-eureka: true
     fetch-registry: true
-  
+application:
+  jwt:
+    secret: mysecretmysecretmysecretmysecretmysecretmysecretmysecretmysecret

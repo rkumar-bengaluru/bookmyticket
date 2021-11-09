@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,17 +19,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 
 public class JwtFilter extends UsernamePasswordAuthenticationFilter {
 
 	private final AuthenticationManager manager;
 	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(JwtFilter.class);
-	private final String key = "mysecretmysecretmysecretmysecretmysecretmysecretmysecretmysecret";
-
-	public JwtFilter(AuthenticationManager manager) {
+	private JwtConfig config;
+	
+	public JwtFilter(AuthenticationManager manager,JwtConfig config) {
 		super();
 		this.manager = manager;
+		this.config = config;
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public class JwtFilter extends UsernamePasswordAuthenticationFilter {
 				.setSubject(auth.getName()) 
 				.claim("authorities", auth.getAuthorities())
 				.setIssuedAt(java.sql.Date.valueOf(LocalDate.now()))
-				.signWith(Keys.hmacShaKeyFor(key.getBytes())) 
+				.signWith(config.secretKey()) 
 				.setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
 				.compact();
 		response.addHeader("Authorization", "Bearer " + token);

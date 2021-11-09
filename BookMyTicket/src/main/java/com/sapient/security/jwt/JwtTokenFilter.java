@@ -11,7 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +25,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(JwtTokenFilter.class);
 	private JwtConfig config;
 	public JwtTokenFilter(JwtConfig config) {
 		super();
@@ -32,8 +33,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	}
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+	protected void doFilterInternal(
+			HttpServletRequest request, 
+			HttpServletResponse response, 
+			FilterChain filterChain)
 			throws ServletException, IOException {
+		logger.info("doFilterInternal");
 		String authHeader = request.getHeader("Authorization");
 		if (Strings.isNullOrEmpty(authHeader) || !authHeader.startsWith("Bearer ")) {
 			filterChain.doFilter(request, response);
@@ -55,11 +60,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			SecurityContextHolder 
 				.getContext() 
 				.setAuthentication(
-						new UsernamePasswordAuthenticationToken(username, authorities)
+						new UsernamePasswordAuthenticationToken(username,null, authorities)
 				);
 		} catch (JwtException e) {
-
+			throw new RuntimeException(e);
 		}
+		
+		filterChain.doFilter(request, response);
+		return;
 
 	}
 

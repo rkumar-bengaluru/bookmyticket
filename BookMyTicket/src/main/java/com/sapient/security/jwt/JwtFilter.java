@@ -38,6 +38,7 @@ public class JwtFilter extends UsernamePasswordAuthenticationFilter {
 			HttpServletResponse response)
 			throws AuthenticationException {
 		try {
+			logger.info("attemptAuthentication");
 			User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
 			Authentication authentication = manager.authenticate(
 					new UsernamePasswordAuthenticationToken(

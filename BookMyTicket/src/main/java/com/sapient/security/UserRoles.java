@@ -15,6 +15,18 @@ public enum UserRoles {
 	PUBLIC(Sets.newHashSet(SEARCH_ALL)),
 	ADMIN(Sets.newHashSet(SEARCH_ALL,PARTNER_WRITE,PARTNER_READ));
 	
+	public Set<SimpleGrantedAuthority> getGrantedAuthrities() {
+		Set<SimpleGrantedAuthority> all = 
+				this.getPermissions().stream().map(
+				permission -> 
+				new SimpleGrantedAuthority(
+						permission.getPermission())) 
+				.collect(Collectors.toSet());
+		
+		all.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+		return all;
+	}
+
 	private final Set<UserPermission> permissions;
 
 	private UserRoles(Set<UserPermission> permissions) {
@@ -24,15 +36,5 @@ public enum UserRoles {
 	public Set<UserPermission> getPermissions() {
 		return permissions;
 	}
-	
-	public Set<SimpleGrantedAuthority> getGrantedAuthrities() {
-		Set<SimpleGrantedAuthority> all = this.getPermissions().stream().map(
-				permission -> 
-				new SimpleGrantedAuthority(permission.getPermission())).collect(Collectors.toSet());
-		
-		all.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
-		return all;
-	}
-	
 	
 }
